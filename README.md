@@ -1,6 +1,6 @@
 ### Yet Another GPT Tutorial
 
-This repo contains a simple usage for utilizing GPT API provided by OpenAI. 
+This repo contains simple usages for utilizing GPT API provided by OpenAI. 
 - [GPT API usage](https://github.com/sjchoi86/yet-another-gpt-tutorial/blob/main/code/demo_gpt_01_chat.ipynb)
 : Basic OpenAI API usage for using [GPT](https://openai.com/gpt-4)
 - [Wiki Summarize](https://github.com/sjchoi86/yet-another-gpt-tutorial/blob/main/code/demo_webcrawl_01_wiki.ipynb)
