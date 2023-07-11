@@ -12,36 +12,35 @@ def wiki_search(entity       = "President of South Korea",
         This function return a number of paragraphs for searching an entity in Wikipedia
     """
     # First, search `en.wikipedia.org` to get page
-    entity_ = entity.replace(" ", "+")
-    search_url = f"https://en.wikipedia.org/w/index.php?search={entity_}"
+    entity_       = entity.replace(" ", "+")
+    search_url    = f"https://en.wikipedia.org/w/index.php?search={entity_}"
     response_text = requests.get(search_url).text
-    soup = BeautifulSoup(response_text, features="html.parser")
-    result_divs = soup.find_all("div", {"class": "mw-search-result-heading"})
-    if result_divs:  # entity mismatch
-        
+    soup          = BeautifulSoup(response_text, features="html.parser")
+    result_divs   = soup.find_all("div", {"class": "mw-search-result-heading"})
+    
+    if result_divs:  # entity mismatch occurs
         # Get related wiki pages
         results = []
         for div in result_divs:
-            link = div.find('a')
-            title = link.text
-            url = link['href']
+            link   = div.find('a')
+            title  = link.text
+            url    = link['href']
             result = {'title': title, 'url': url}
             results.append(result)
         
-        # Let's the first matched result for now
-        entity_new = results[0]['title']
-        search_url = f"https://en.wikipedia.org/w/index.php?search={entity_new}"
+        # Use the first matched wiki page
+        entity_new    = results[0]['title']
+        search_url    = f"https://en.wikipedia.org/w/index.php?search={entity_new}"
         response_text = requests.get(search_url).text
-        soup = BeautifulSoup(response_text, features="html.parser")
-        page = [p.get_text().strip() for p in soup.find_all("p") + soup.find_all("ul")]
+        soup          = BeautifulSoup(response_text, features="html.parser")
+        page          = [p.get_text().strip() for p in soup.find_all("p") + soup.find_all("ul")]
         
-        # Debug print
-        if VERBOSE:
+        if VERBOSE: # Debug print
             print ("entity:[%s] mismatched. use [%s] instead."%(entity,entity_new))
     else:
         page = [p.get_text().strip() for p in soup.find_all("p") + soup.find_all("ul")]
-        # Debug print
-        if VERBOSE:
+        
+        if VERBOSE: # Debug print
             print ("entity:[%s] matched."%(entity))
     # Then, clean some strings
     def clean_str(p):
@@ -63,8 +62,11 @@ def wiki_search(entity       = "President of South Korea",
     paragraphs_sorted   = sorted(praagraphs_remain,key=len,reverse=True)
     paragraphs_top_m    = paragraphs_sorted[:top_m_excluding_first_k]
     paragraphs_return   = paragraphs_first_k + paragraphs_top_m
-    if VERBOSE:
+    
+    if VERBOSE: # Debug print
         print (" After filtering, we have [%d] and [%d] paragraphs returned (k:[%d] and m:[%d])"%
            (len(paragraphs_filtered),len(paragraphs_return),first_k,top_m_excluding_first_k
            ))
+        
+    # Return filtered paragraphs
     return paragraphs_return
