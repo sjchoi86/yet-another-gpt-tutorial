@@ -44,7 +44,12 @@ def wiki_search(entity       = "President of South Korea",
             print ("entity:[%s] matched."%(entity))
     # Then, clean some strings
     def clean_str(p):
-        return p.encode().decode("unicode-escape").encode("latin1").decode("utf-8")
+        p = p.replace('\\', '/') # <= Debug using GPT and it works!
+        p_encode = p.encode()
+        p_decode = p_encode.decode("unicode-escape")
+        p_encode2 = p_decode.encode('latin1')
+        p_decode2 = p_encode2.decode('utf-8')
+        return p_decode2
     page_clean = ""
     for p in page:
         page_clean += clean_str(p)

@@ -1,6 +1,7 @@
 import copy
 import os
 import openai
+from tenacity import retry, stop_after_attempt, wait_fixed
 from IPython.display import Markdown,display
 from util import printmd
 
@@ -47,6 +48,7 @@ class GPTchatClass():
         else:
             return None
     
+    @retry(stop=stop_after_attempt(10), wait=wait_fixed(5))
     def chat(self,user_msg='hi',
              PRINT_USER_MSG=True,PRINT_GPT_OUTPUT=True,
              RESET_CHAT=False,RETURN_RESPONSE=True):
